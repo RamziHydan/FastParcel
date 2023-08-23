@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <!-- ------------------ Start Styling Component✅ ------------------ -->
+  {# Load the tag library #}
+  {% load bootstrap5 %}
+  {# Load CSS and JavaScript #}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  {# Display django.contrib.messages as Bootstrap alerts #}
+  {% bootstrap_messages %}
+  {% load static %}
+  <!-- Google font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:wght100@;300;500&display=swap" />
+  <!-- Bootstrap and fontawsome header link and footer -->
+  <!-- <link rel="stylesheet" href="{% static '/css/bootstrap.min.css'%}"> -->
+ 
+
+  <!-- ------------------ End Styling Component✅ ------------------ -->
+
+{% block head %} {% endblock %}
+
+</head>
+<body>
+  {% include 'navbar.html' %}
+  {% block content %} 
+  {% endblock %}
+
+
+  <footer>
+      <!-- Bootstrap and fontawsome header link and footer -->
+ 
+      <!-- <script src="{% static '/js/bootstrap.bundle.min.js'%}"></script>
+      <script src="{% static '/js/bootstrap.bundle.min.js.map'%}"></script> -->
+  </footer>
+
+</body>
+</html>
