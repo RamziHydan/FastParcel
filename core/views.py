@@ -17,7 +17,8 @@ def sign_up(request):
             user=form.save(commit=False)
             user.username=email
             user.save()
-
+            # Send welcome email
+            
             login(request,user)
             return redirect('/')
     context={
