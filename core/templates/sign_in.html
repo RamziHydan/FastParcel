@@ -28,7 +28,8 @@
                         {% bootstrap_field form.password %}
                         <button class="btn btn-warning btn-block">Sign In</button>
                         <p class="text-center mt-3">New to Fast Parcel? </p><a href="/sign-up/?next={{ request.GET.next }}">Sign Up</a>
-
+                            <hr>
+                            <a href="{% url 'social:begin' 'facebook' %}?next={{request.GET.next}}" class="btn btn-outline-primary btn-block">Sign In with Facebook</a>
                     </form>
                </div>
             </div>

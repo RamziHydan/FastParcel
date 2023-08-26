@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # My addition
     'bootstrap5',
+    'social_django',
     
 ]
 
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.ProfileMiddleware',
 ]
 
 ROOT_URLCONF = 'fastparcel.urls'
@@ -69,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -126,13 +130,16 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'fastparcel/static')
 ]
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+MEDIA_URL='/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL='sign-in'
+LOGIN_URL='/sign-in/'
 LOGIN_REDIRECT_URL='/'
 
 
@@ -147,3 +154,25 @@ EMAIL_HOST_PASSWORD="ftqkaymapoimxmax"
 EMAIL_USE_TLS =True
 EMAIL_PORT='587'
 DEFAULT_FORM_EMAIL='Fast Parcel <no-replay@fastparcel.localhost>'
+
+
+
+
+
+
+AUTHENTICATION_BACKENDS = (
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.google.GoogleOpenId',
+    # 'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.google.GoogleOAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY="1285104225504661"
+SOCIAL_AUTH_FACEBOOK_SECRET="c2988e775c8d3f7c4288d6236aec8464"
+SOCIAL_AUTH_FACEBOOK_SCOPE=['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS={
+    'fields':'id,name,email'
+}

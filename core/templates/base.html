@@ -13,7 +13,7 @@
   {% bootstrap_css %}
   {% bootstrap_javascript %}
   {# Display django.contrib.messages as Bootstrap alerts #}
-  {% bootstrap_messages %}
+
   {% load static %}
   <!-- Google font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,7 +29,21 @@
 
 </head>
 <body>
+
+
   {% include 'navbar.html' %}
+  <!-- <div class="container pt-3">
+    {% if messages  %}
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible"> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif%}
+    </div> -->
+    <!-- <div class="container m-5 text-center"> {% bootstrap_messages %}</div> -->
+ 
   {% block content %} 
   {% endblock %}
 
@@ -37,9 +51,48 @@
   <footer>
       <!-- Bootstrap and fontawsome header link and footer -->
  
-      <!-- <script src="{% static '/js/bootstrap.bundle.min.js'%}"></script>
-      <script src="{% static '/js/bootstrap.bundle.min.js.map'%}"></script> -->
+      <!-- <script src="{% static '/js/bootstrap.bundle.min.js'%}"></script> -->
+      <!-- <script src="{% static '/js/bootstrap.bundle.min.js.map'%}"></script>  -->
   </footer>
 
+
+
+
+<!-- Include Toastify CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<!-- Include Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<style>
+.toastify-modern {
+  background-color: #222;
+  color: #000000;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}</style>
+<script>
+  function toast(message, type) {
+    Toastify({
+      text: message,
+      backgroundColor: type === 'success' ? '#ffc107' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#5477f5',
+      position: 'center', // Change the position to 'bottom-right'
+      duration: 2000,
+      className: 'toastify-modern',
+      stopOnFocus: true,
+      onClick: function() {
+        // Handle click event here if needed
+      },
+     
+    }).showToast();
+  }
+  {% if messages %}
+    {% for message in messages %}
+      toast('{{ message }}', '{{ message.tags }}');
+    {% endfor %}
+  {% endif %}
+</script>
 </body>
 </html>
