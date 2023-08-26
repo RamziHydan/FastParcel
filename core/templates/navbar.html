@@ -1,19 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-warning">
-    <a class="navbar-brand" href="#">My Club</a>
+<nav class="navbar {% if not request.user.is_authenticated %} navbar-expand-lg {% endif %} navbar-light bg-warning">
+    <a class="navbar-brand" href="#">Fast Parcel</a>
+    {% if not request.user.is_authenticated %}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" href="">Customer</a>
-        </li>
-        <li class="nav-item">
-        <li class="nav-item">
-          <a class="nav-link" href="">Courier</a>
+        <li class="nav-item {% if request.GET.next != '/courier/' %}active {% endif %}">
+          <a class="nav-link active" href="/sign-in/?next=/customer/">Customer</a>
+                </li>
+       
+        <li class="nav-item {% if request.GET.next == '/courier/' %}active {% endif %}">
+          <a class="nav-link active" href="/sign-in/?next=/courier/">Courier</a>
         </li>
       </ul>
     </div>
+    {% else %}
+    <form action="" class="form-inline">
+      <span class="mr-4">
+        {{request.user.get_full_name|title}}
+        <a href="/sign-out" class="btn btn-outline-dark">Sign Out</a>
+      </span>
+    </form>
+    {% endif %}
   </nav>
   
