@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # My addition
     'bootstrap5',
     'social_django',
+
+    'jquery',
     
 ]
 
@@ -176,3 +178,6 @@ SOCIAL_AUTH_FACEBOOK_SCOPE=['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS={
     'fields':'id,name,email'
 }
+
+
+FIREBASE_ADMIN_CREDENTIAL=os.path.join(BASE_DIR,"fast-cfb25-firebase-adminsdk-7ngn8-6b5b2d8134.json")

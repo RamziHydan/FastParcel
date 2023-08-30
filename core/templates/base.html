@@ -60,7 +60,8 @@
 
 <!-- Include Toastify CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js" /> -->
 <!-- Include Toastify JS -->
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <style>
@@ -74,25 +75,64 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }</style>
 <script>
-  function toast(message, type) {
-    Toastify({
-      text: message,
-      backgroundColor: type === 'success' ? '#ffc107' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#5477f5',
-      position: 'center', // Change the position to 'bottom-right'
-      duration: 2000,
-      className: 'toastify-modern',
-      stopOnFocus: true,
-      onClick: function() {
-        // Handle click event here if needed
-      },
-     
-    }).showToast();
-  }
-  {% if messages %}
-    {% for message in messages %}
-      toast('{{ message }}', '{{ message.tags }}');
-    {% endfor %}
-  {% endif %}
+function toast(message, type) {
+  Toastify({
+    text: message,
+    backgroundColor: type === 'success' ? '#ffc107' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#5477f5',
+    position: 'center', // Change the position to 'bottom-right'
+    duration: 2000,
+    className: 'toastify-modern',
+    stopOnFocus: true,
+    onClick: function() {
+      // Handle click event here if needed
+    },
+   
+  }).showToast();
+}
+{% if messages %}
+  {% for message in messages %}
+    toast('{{ message }}', '{{ message.tags }}');
+  {% endfor %}
+{% endif %}
+
 </script>
+<!-- var isTaskCompleted = false; // Replace this with your task completion logic
+
+// Check if the browser supports notifications
+if ('Notification' in window) {
+  // Request permission to display notifications
+  Notification.requestPermission().then(function (permission) {
+    if (permission === 'granted') {
+      // Define the message and type based on task completion status
+      var message, type;
+      if (isTaskCompleted) {
+        message = 'Task completed successfully.';
+        type = 'success';
+      } else {
+        message = 'Task not completed.';
+        type = 'error';
+      }
+
+      // Call the toast function to display the notification
+      toast(message, type);
+    }
+  });
+}
+
+// Toast function to display notification
+function toast(message, type) {
+  Toastify({
+    text: message,
+    backgroundColor: type === 'success' ? '#ffc107' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#5477f5',
+    position: 'center', // Change the position to 'bottom-right'
+    duration: 2000,
+    className: 'toastify-modern',
+    stopOnFocus: true,
+    onClick: function() {
+      // Handle click event here if needed
+    }
+  }).showToast();
+} -->
+
 </body>
 </html>

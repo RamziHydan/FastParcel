@@ -2,13 +2,31 @@
 
 {% load bootstrap5 %}
 {% load static %}
-
+{% block head %}
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyASXA62Phn2w2sLrwZf0yQap9anlT8wwA4",
+        authDomain: "fast-cfb25.firebaseapp.com",
+        projectId: "fast-cfb25",
+        storageBucket: "fast-cfb25.appspot.com",
+        messagingSenderId: "936169226895",
+        appId: "1:936169226895:web:d8dfc81fb5d0c871df26fa"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+</script>
+{% endblock %}
 
 {% block main %}
+
+<!-- Baisc Information -->
 <b class="text-secondary">Baisc Information </b>
 <div class="card bg-white mt-2 mb-5">
     <div class="card-body">
-        <form  method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form user_form %}
             {% bootstrap_form customer_form %}
@@ -17,4 +35,114 @@
         </form>
     </div>
 </div>
+
+<!-- Change Password -->
+<b class="text-secondary">Change Password</b>
+<div class="card bg-white mt-2 mb-5">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form password_form %}
+            <input type="hidden" name="action" value="update_password">
+            <button type="submit" class="btn btn-warning">Save</button>
+        </form>
+    </div>
+</div>
+<!-- Phone Number And Verify Code-->
+<b class="text-secondary">Phone Number</b>
+<div class="card bg-white mt-2 mb-5">
+    <div class="card-body">
+        <div id="recaptcha-container"></div>
+        <div id="get-code" class="input-group mb-3 {% if request.user.customer.phone_number %} d-none {% endif %}">
+            <input type="text" class="form-control" placeholder="Your Phone number">
+            <button class="btn btn-warning" type="button">Send Code</button>
+        </div>
+
+        <div id="verify-code" class="input-group mb-3 d-none">
+            <input type="text" class="form-control" placeholder="Verification Code">
+            <button class="btn btn-warning" type="button">Verify</button>
+        </div>
+
+        <div id="change-phone"
+            class="input-group mb-3 {% if not request.user.customer.phone_number %} d-none {% endif %}">
+            <input type="text" class="form-control" disabled value="{{ request.user.customer.phone_number}}">
+            <button class="btn btn-warning" type="button">Change</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Set a cookie with the SameSite attribute
+    // document.cookie = "cookieName=cookieValue; SameSite=Strict";
+    document.cookie = "cookieName=cookieValue; SameSite=Lax";
+    function onVerify(idToken) {
+        var form = document.createElement("form");
+        form.method = "POST";
+
+        var element1 = document.createElement("input");
+        element1.name = "id_token";
+        element1.value = idToken;
+        form.appendChild(element1)
+
+        var element2 = document.createElement("input");
+        element2.name = "action";
+        element2.value = "update_phone";
+        form.appendChild(element2)
+
+        var element3 = document.createElement("input");
+        element3.name = "csrfmiddlewaretoken";
+        element3.value = "{{ csrf_token }}";
+        form.appendChild(element3)
+
+        document.body.appendChaild(form);
+        form.submit();
+    }
+
+
+    var recaptchaContainer = document.getElementById('recaptcha-container');
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, { 'size': 'invisible' });
+
+    $("#get-code button").on('click', function () {
+        const phoneNumber = $("#get-code input").val();
+        console.log(phoneNumber);
+
+        firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                console.log(confirmationResult);
+                window.confirmationResult = confirmationResult;
+                $("#get-code").addClass("d-none");
+                $("#verify-code").removeClass("d-none");
+            }).catch((error) => {
+                // Error; SMS not sent
+                toast(error.message, 'error');
+            });
+    });
+
+    $("#verify-code button").on('click', function () {
+        const code = $("#verify-code input").val();
+
+        confirmationResult.confirm(code).then((result) => {
+            // User signed in successfully.
+            const user = result.user;
+            console.log(user.phoneNumber);
+            user.getIdToken().then(function (idToken) {
+                console.log(idToken);
+                onVerify(idToken);
+            });
+        }).catch((error) => {
+            // User couldn't sign in (bad verification code?)
+            toast(error.message, 'error');
+        });
+    });
+    $("#change-phone button").on('click', function () {
+        $("#change-phone").addClass("d-none");
+        $("#get-code").removeClass("d-none");
+    });
+</script>
 {% endblock %}
