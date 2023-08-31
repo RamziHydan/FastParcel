@@ -179,5 +179,11 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS={
     'fields':'id,name,email'
 }
 
-
+# phone verification code
 FIREBASE_ADMIN_CREDENTIAL=os.path.join(BASE_DIR,"fast-cfb25-firebase-adminsdk-7ngn8-6b5b2d8134.json")
+
+
+# Payment
+STRIPE_API_PUBLIC_KEY="pk_test_51NkoM7G8YJVYHB5VWpR4KRWU9E3yFLAXruHd3yIP6uVFq2BBejc03EXoMQ5DzGKIFgOngs5u9Rhnjc8DhCPh7pU900dhhFsGQs"
+STRIPE_API_SECRET_KEY="sk_test_51NkoM7G8YJVYHB5VrQNHJ8NpNGdshcPn1LHLeDbtoGfq3RSTkekEuscQjQIfDmeHU9IzUDhwP5lVOQDKRqAY8S9A00hnC3Il0b"
+

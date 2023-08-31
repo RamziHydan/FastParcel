@@ -1,0 +1,71 @@
+{% extends 'customer/base.html' %}
+
+{% block head %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block main %}
+
+{% if not request.user.customer.stripe_payment_method_id %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Let's add your Credit or Debit card to <strong>Create a Job</strong>
+    <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close">
+    </button>
+</div>
+{% endif %}
+
+<b class="text-secondary">Your Credit/Debit Card</b>
+<div class="card bg-white m-2 p-3">
+    <div class="card-body">
+        {% if request.user.customer.stripe_payment_method_id %}
+        <div id="change-card" class="input-group">
+            <input type="text" class="form-control" disabled 
+            value="**** **** **** {{ request.user.customer.stripe_card_last4 }}">
+            <div class="input-group-append">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <form id="setup-form" data-secret="{{ client_secret }}">
+            <div id="card-element" class=""></div>
+            <button id="card-button" class="btn btn-warning mt-3" type="button">
+                Save Card
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% if not request.user.customer.stripe_payment_method_id %}
+<script>
+var stripe = Stripe("{{ STRIPE_API_PUBLIC_KEY }}");
+var elements = stripe.elements();
+var cardElement = elements.create('card');
+cardElement.mount('#card-element');
+
+var cardButton = document.getElementById('card-button');
+var clientSecret = "{{ client_secret }}";
+
+cardButton.addEventListener('click', function(ev) {
+    stripe.confirmCardSetup(
+        clientSecret,
+        {
+            payment_method: {
+                card: cardElement,
+            },
+        }
+    ).then(function(result) {
+        if (result.error) {
+            toast(result.error.message, 'error');
+        } else {
+            toast("Payment method is added", 'success');
+            window.location.reload();
+        }
+    });
+});
+</script>
+{% endif %}
+
+{% endblock %}
